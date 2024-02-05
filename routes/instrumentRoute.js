@@ -1,14 +1,14 @@
 import axios from "axios";
 import express from "express";
-import Musician from "../models/musicianMod.js";
+import Instrument from "../models/instrumentMod.js";
 
 const router=express.Router();
 
 //Chiamata post 
 router.post('/', async (req,res)=>{
     try{
-        const musician=await Musician.create(req.body);
-        res.send(musician)
+        const instrument=await Instrument.create(req.body);
+        res.send(instrument)
     }catch(error){
         res.status(400).send( console.error(error))
     }
@@ -17,8 +17,8 @@ router.post('/', async (req,res)=>{
 //chiamata get dell'intera collection
 router.get('/', async (req,res)=>{
     try{
-        const musicians = await Musician.find();
-        res.send(musicians)
+        const instruments = await Instrument.find();
+        res.send(intruments)
     }catch(error){
         res.status(404).send(console.error(error))
     }

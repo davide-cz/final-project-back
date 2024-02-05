@@ -17,12 +17,24 @@ const MusicianSchema=new Schema ({
         maxLength:30,
         trim:true
     } ,
+    user_name:{
+        type:String,
+        required:true,
+        minLength:1,
+        maxLength:30,
+        trim:true
+    },
     birthdate: {
         type:Date,      
     },
     instrument:{
         type:SchemaTypes.ObjectId
+    },
+    genre:{
+        type:String,
+        required:true
     }
+
 });
 
 const Musician = model('Musician', MusicianSchema );

@@ -3,12 +3,17 @@ import mongoose from 'mongoose';
 const { Schema , SchemaTypes , model } = mongoose;
 
 const InstrumentSchema=new Schema ({
-    instrument:{
+    principal_instrument:{
         type:String,
         required:true
     },
-    role:String,
-    genre:String
+    other_instruments:{
+        type:[],
+        default:null
+    },
+    role:{
+        type:String
+    }
 });
 
 const Instrument = model('Instrument', InstrumentSchema );
