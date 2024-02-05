@@ -17,12 +17,13 @@ const MusicianSchema=new Schema ({
         maxLength:30,
         trim:true
     } ,
-    user_name:{
+    userName:{
         type:String,
         required:true,
         minLength:1,
         maxLength:30,
-        trim:true
+        trim:true,
+        unique:true
     },
     birthdate: {
         type:Date,      
@@ -33,9 +34,27 @@ const MusicianSchema=new Schema ({
     genre:{
         type:String,
         required:true
+    },
+    slug:{
+        type:String,
+        validate:{
+            validator:async function(slug){
+                const Musician=this.constructor;
+                const isValid=this.slug===slug ||  
+                    !(await Author.exists({ slug }));
+                    return isValid
+            }
+        }
     }
 
 });
+
+MusicianSchema.methods.slugThis=async function(){
+    const Musician=this.constructor;
+    const {userName}=Musician;
+    let slug=userName;
+    this.slug=slug;
+}
 
 const Musician = model('Musician', MusicianSchema );
 

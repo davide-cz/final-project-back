@@ -24,4 +24,22 @@ router.get('/', async (req,res)=>{
     }
 });
 
+//Patch partendo da ID
+router.patch('/:id', async (req,res)=>{
+    try{
+        const {id}=req.params
+        const newMusician=Object.entries(req.body)
+        const musicianToUpdate=await Musician.findById(id);
+        newMusician.forEach(([key,value])=>{
+            musicianToUpdate[key]=value;
+        })
+        console.log(musicianToUpdate)
+        await musicianToUpdate.save();
+        res.send(musicianToUpdate);
+    }catch(error){
+        res.status(400).send(console.error(error))
+    }
+
+})
+
 export default router

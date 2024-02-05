@@ -18,7 +18,7 @@ router.post('/', async (req,res)=>{
 router.get('/', async (req,res)=>{
     try{
         const instruments = await Instrument.find();
-        res.send(intruments)
+        res.send(instruments)
     }catch(error){
         res.status(404).send(console.error(error))
     }

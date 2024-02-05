@@ -7,7 +7,9 @@ import instrumentRoute from './routes/instrumentRoute.js'
 dotenv.config();
 
 const {MONGO_URI}=process.env;
-await mongoose.connect(MONGO_URI)
+
+mongoose.connect(MONGO_URI)
+.then(console.log('connesso a mongoDB'))
 
 import morgan from 'morgan'
 
