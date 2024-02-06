@@ -39,7 +39,6 @@ router.patch('/:id', async (req,res)=>{
     }catch(error){
         res.status(400).send(console.error(error))
     }
-
 })
 
 export default router
