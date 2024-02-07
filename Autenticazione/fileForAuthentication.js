@@ -34,17 +34,4 @@ export const verifyToken = (token) => {
     return _id;
 }
 
-/* 
-export const isAuthenticated= async (req,res,next)=>{
-    try{
-        const {token} = req.cookies ;
-        if(!token){
-            res.send('must login to access the site')
-        }
-        const verify=await jwt.verify(token,SECRET_KEY);
-        req.user = await Musician.findById(verify.id);
-     }catch(error){
-        console.error(error);
-     }next()
-} */
 

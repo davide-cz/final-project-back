@@ -7,11 +7,6 @@ const InstrumentSchema=new Schema ({
         type:String,
         required:true
     },
-    //valutare se togliere
-    other_instruments:{
-        type:[],
-        default:null
-    },
     role:{
         type:String
     }

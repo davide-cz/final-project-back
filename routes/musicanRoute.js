@@ -25,6 +25,18 @@ router.get('/', async (req,res)=>{
     }
 });
 
+//chiamata get per singolo DOCUMENT
+
+router.get('/:id' , (req,res)=>{
+    try{
+        const {id}=req.params;
+        const musician = Musician.findById(id);
+        res.send(musician);
+    }catch(error){
+        res.status(404).send('musician not found');
+    }
+});
+
 //Patch partendo da ID
 router.patch('/:id', async (req,res)=>{
     try{
@@ -43,6 +55,7 @@ router.patch('/:id', async (req,res)=>{
 })
 
 
+//gestione LOGIN / SIGNUP
 router.post('/signup', async (req, res) => {
 
     const {email, password} = req.body;
@@ -67,7 +80,6 @@ router.post('/signup', async (req, res) => {
 });
 
 
-//gestione LOGIN / SIGNUP
 router.post('/login', async (req, res) => {
 
     const {email, password} = req.body;
@@ -76,15 +88,15 @@ router.post('/login', async (req, res) => {
     }
 
     try{
-        const user = await Musician.logIn(email, password);
-        const token = generateToken(user._id);
+        const musician = await Musician.logIn(email, password);
+        const token = generateToken(musician._id);
         res.cookie('token', token, {
             httpOnly: true,
             maxAge: 3 * 24 * 60 * 60 * 1000, //3d
             sameSite: 'none',
             secure: true,
         });
-        return res.status(202).send(user.clean());
+        return res.status(202).send(musician);
     }catch(error){
         console.error(error);
     }

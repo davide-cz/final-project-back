@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const { Schema , SchemaTypes , model } = mongoose;
 import validator from "validator";
 const { isStrongPassword, isEmail } = validator;
-import { hashPassword } from '../Autenticazione/fileForAuthentication.js';
+import { hashPassword,comparePassword, } from '../Autenticazione/fileForAuthentication.js';
 
 
 const strongPasswordOptions = {
@@ -105,7 +105,7 @@ musicianSchema.statics.findByEmail = function(email){
     return this.findOne({email});
 }
 
-musicianSchema.statics.login=async function (email,password){
+musicianSchema.statics.logIn=async function (email,password){
     const musician = await this.findByEmail(email);
     const fail = () => {
         throw StatusError(401, 'Incorrect Email or Password.');
@@ -115,7 +115,7 @@ musicianSchema.statics.login=async function (email,password){
         fail();
     }
 
-    const passwordMatch = await comparePassword(password, user.password);
+    const passwordMatch = await comparePassword(password, musician.password);
     if(!passwordMatch){
         fail();
     }
