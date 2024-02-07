@@ -14,7 +14,7 @@ const strongPasswordOptions = {
     minSymbols: 1,
 }
 
-const musicianSchema=new Schema ({
+const usserSchema=new Schema ({
     first_name: {
         type:String,
         required:true,
@@ -54,20 +54,14 @@ const musicianSchema=new Schema ({
     birthdate: {
         type:Date,      
     },
-    instrument:{
-        type:SchemaTypes.ObjectId
-    },
-    genre:{
-        type:String,
-        required:true
-    },
+
     slug:{
         type:String,
         validate:{
             validator:async function(slug){
-                const Musician=this.constructor;
+                const User=this.constructor;
                 const isValid=this.slug===slug ||  
-                    !(await Musician.exists({ slug }));
+                    !(await User.exists({ slug }));
                     return isValid
             }
         }
@@ -75,14 +69,14 @@ const musicianSchema=new Schema ({
 
 });
 
-musicianSchema.methods.slugThis=async function(){
-    const Musician=this.constructor;
-    const {userName}=Musician;
+userSchema.methods.slugThis=async function(){
+    const User=this.constructor;
+    const {userName}=User;
     let slug=userName;
     this.slug=slug;
 };
 
-musicianSchema.statics.signUp = async function (email,password){
+userSchema.statics.signUp = async function (email,password){
     if(!isEmail(email)){
         throw new Error( 'Must use a real email.')
     }
@@ -96,33 +90,33 @@ musicianSchema.statics.signUp = async function (email,password){
     //creare modo per Hashare password 
     const hashedPassword = await hashPassword(password);
 
-    const musician = await this.create({email, password: hashedPassword}); 
+    const user = await this.create({email, password: hashedPassword}); 
     
-    return musician;
+    return user;
 }
 
-musicianSchema.statics.findByEmail = function(email){
+userSchema.statics.findByEmail = function(email){
     return this.findOne({email});
 }
 
-musicianSchema.statics.logIn=async function (email,password){
-    const musician = await this.findByEmail(email);
+userSchema.statics.logIn=async function (email,password){
+    const user = await this.findByEmail(email);
     const fail = () => {
         throw StatusError(401, 'Incorrect Email or Password.');
     }
 
-    if(!musician){
+    if(!user){
         fail();
     }
 
-    const passwordMatch = await comparePassword(password, musician.password);
+    const passwordMatch = await comparePassword(password, user.password);
     if(!passwordMatch){
         fail();
     }
-    return musician
+    return user
 
 }
 
-const Musician = model('Musician', musicianSchema );
+const User = model('User', userSchema );
 
-export default Musician
+export default User
