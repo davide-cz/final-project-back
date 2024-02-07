@@ -1,6 +1,7 @@
 import axios from "axios";
 import express from "express";
 import Musician from "../models/musicianMod.js";
+import { generateToken } from "../Autenticazione/fileForAuthentication.js";
 
 const router=express.Router();
 
@@ -40,5 +41,54 @@ router.patch('/:id', async (req,res)=>{
         res.status(400).send(console.error(error))
     }
 })
+
+
+router.post('/signup', async (req, res) => {
+
+    const {email, password} = req.body;
+    if(!email || !password){
+        return res.status(400).send('All fields must be filled.')
+    }
+
+    try{
+        const musician = await Musician.signUp(email, password);
+        const token = generateToken(musician._id);
+        res.cookie('token', token, {
+            httpOnly: true,
+            maxAge: 3 * 24 * 60 * 60 * 1000, //3d
+            sameSite: 'none',
+            secure: true,
+        });
+        return res.status(201).send(musician);
+    }catch(error){
+        console.error(error);
+    }
+
+});
+
+
+//gestione LOGIN / SIGNUP
+router.post('/login', async (req, res) => {
+
+    const {email, password} = req.body;
+    if(!email || !password){
+        return res.status(400).send('All fields must be filled.')
+    }
+
+    try{
+        const user = await Musician.logIn(email, password);
+        const token = generateToken(user._id);
+        res.cookie('token', token, {
+            httpOnly: true,
+            maxAge: 3 * 24 * 60 * 60 * 1000, //3d
+            sameSite: 'none',
+            secure: true,
+        });
+        return res.status(202).send(user.clean());
+    }catch(error){
+        console.error(error);
+    }
+
+});
 
 export default router

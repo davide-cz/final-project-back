@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const { Schema , SchemaTypes , model } = mongoose;
 import validator from "validator";
 const { isStrongPassword, isEmail } = validator;
+import { hashPassword } from '../Autenticazione/fileForAuthentication.js';
 
 
 const strongPasswordOptions = {
@@ -13,24 +14,24 @@ const strongPasswordOptions = {
     minSymbols: 1,
 }
 
-const MusicianSchema=new Schema ({
+const musicianSchema=new Schema ({
     first_name: {
         type:String,
-        required:true,
+        required:false,
         minLength:1,
         maxLength:30,
         trim:true
     },
     last_name: {
         type:String,
-        required:true,
+        required:false,
         minLength:1,
         maxLength:30,
         trim:true
     } ,
     userName:{
         type:String,
-        required:true,
+        required:false,
         minLength:1,
         maxLength:30,
         trim:true,
@@ -58,7 +59,7 @@ const MusicianSchema=new Schema ({
     },
     genre:{
         type:String,
-        required:true
+        required:false
     },
     slug:{
         type:String,
@@ -74,32 +75,54 @@ const MusicianSchema=new Schema ({
 
 });
 
-MusicianSchema.methods.slugThis=async function(){
+musicianSchema.methods.slugThis=async function(){
     const Musician=this.constructor;
     const {userName}=Musician;
     let slug=userName;
     this.slug=slug;
 };
 
-MusicianSchema.statics.signUp = async function (email,password){
+musicianSchema.statics.signUp = async function (email,password){
     if(!isEmail(email)){
-        throw StatusError(400, 'Must use a real email.')
+        throw new Error( 'Must use a real email.')
     }
     if(!isStrongPassword(password, strongPasswordOptions)){
-        throw StatusError(400, 'Password not strong enough.')
+        throw new Error( 'Password not strong enough.')
     }
     const emailExists = await this.exists({email});
     if(emailExists){
-        throw StatusError(400, 'Email already in use.')
+        throw new Error( 'Email already in use.')
     }
     //creare modo per Hashare password 
-   /*  const hashedPassword = await hashPassword(password);
+    const hashedPassword = await hashPassword(password);
 
-    const user = await this.create({email, password: hashedPassword}); */
+    const musician = await this.create({email, password: hashedPassword}); 
     
-    return user;
+    return musician;
 }
 
-const Musician = model('Musician', MusicianSchema );
+musicianSchema.statics.findByEmail = function(email){
+    return this.findOne({email});
+}
+
+musicianSchema.statics.login=async function (email,password){
+    const musician = await this.findByEmail(email);
+    const fail = () => {
+        throw StatusError(401, 'Incorrect Email or Password.');
+    }
+
+    if(!musician){
+        fail();
+    }
+
+    const passwordMatch = await comparePassword(password, user.password);
+    if(!passwordMatch){
+        fail();
+    }
+    return musician
+
+}
+
+const Musician = model('Musician', musicianSchema );
 
 export default Musician
