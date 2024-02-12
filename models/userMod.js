@@ -14,31 +14,14 @@ const strongPasswordOptions = {
     minSymbols: 1,
 }
 
-const usserSchema=new Schema ({
-    first_name: {
-        type:String,
-        required:true,
-        minLength:1,
-        maxLength:30,
-        trim:true
-    },
-    last_name: {
-        type:String,
-        required:true,
-        minLength:1,
-        maxLength:30,
-        trim:true
-    } ,
-    userName:{
-        type:String,
-        required:true,
-        minLength:1,
-        maxLength:30,
-        trim:true,
-        unique:true
-    },
+const userSchema=new Schema ({
     // props autenticazione USER
 
+    user_name:{
+        type:String,
+        unique:true,
+        required:true,
+    },
     email:{
         type:String,
         required:true,
@@ -50,47 +33,29 @@ const usserSchema=new Schema ({
         required:true,
         type:String
     },
-
-    birthdate: {
-        type:Date,      
-    },
-
-    slug:{
-        type:String,
-        validate:{
-            validator:async function(slug){
-                const User=this.constructor;
-                const isValid=this.slug===slug ||  
-                    !(await User.exists({ slug }));
-                    return isValid
-            }
-        }
-    }
+    role: {
+        type: String,
+        enum: ['admin', 'user', 'musician'],
+        default: 'user'
+      }
 
 });
 
-userSchema.methods.slugThis=async function(){
-    const User=this.constructor;
-    const {userName}=User;
-    let slug=userName;
-    this.slug=slug;
-};
 
-userSchema.statics.signUp = async function (email,password){
-    if(!isEmail(email)){
-        throw new Error( 'Must use a real email.')
-    }
-    if(!isStrongPassword(password, strongPasswordOptions)){
-        throw new Error( 'Password not strong enough.')
-    }
+userSchema.statics.signUp = async function (user_name,email,password,role){
+ 
     const emailExists = await this.exists({email});
     if(emailExists){
         throw new Error( 'Email already in use.')
     }
+    const userNameExists = await this.exists({user_name});
+    if(userNameExists){
+        throw new Error( 'user_name already in use.')
+    }
     //creare modo per Hashare password 
     const hashedPassword = await hashPassword(password);
 
-    const user = await this.create({email, password: hashedPassword}); 
+    const user = await this.create({user_name,email, password: hashedPassword,role}); 
     
     return user;
 }
@@ -99,10 +64,14 @@ userSchema.statics.findByEmail = function(email){
     return this.findOne({email});
 }
 
+userSchema.statics.findByUserName = function(user_name){
+    return this.findOne({user_name});
+}
+
 userSchema.statics.logIn=async function (email,password){
     const user = await this.findByEmail(email);
     const fail = () => {
-        throw StatusError(401, 'Incorrect Email or Password.');
+        throw new Error('Incorrect Email or Password.');
     }
 
     if(!user){

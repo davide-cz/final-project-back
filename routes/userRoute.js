@@ -27,13 +27,13 @@ router.get('/', async (req,res)=>{
 
 //chiamata get per singolo DOCUMENT
 
-router.get('/:id' , (req,res)=>{
+router.get('/:user_name' , async (req,res)=>{
     try{
-        const {id}=req.params;
-        const user = User.findById(id);
+        const {user_name}=req.params;
+        const user = await User.findByUserName(user_name);
         res.send(user);
     }catch(error){
-        res.status(404).send('musician not found');
+        res.status(404).send('user not found');
     }
 });
 
@@ -55,16 +55,17 @@ router.patch('/:id', async (req,res)=>{
 })
 
 
+
 //gestione LOGIN / SIGNUP
 router.post('/signup', async (req, res) => {
 
-    const {email, password} = req.body;
-    if(!email || !password){
+    const {user_name,email, password  } = req.body;
+    if( !user_name || !email || !password){
         return res.status(400).send('All fields must be filled.')
     }
 
     try{
-        const user = await User.signUp(email, password);
+        const user = await User.signUp(user_name, email, password );
         const token = generateToken(user._id);
         res.cookie('token', token, {
             httpOnly: true,
@@ -89,7 +90,7 @@ router.post('/login', async (req, res) => {
 
     try{
         const user = await User.logIn(email, password);
-        const token = generateToken(musician._id);
+        const token = generateToken(user._id);
         res.cookie('token', token, {
             httpOnly: true,
             maxAge: 3 * 24 * 60 * 60 * 1000, //3d

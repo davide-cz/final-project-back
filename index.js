@@ -3,6 +3,7 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import musicianRoute from './routes/musicanRoute.js'
+import userRoute from './routes/userRoute.js'
 import instrumentRoute from './routes/instrumentRoute.js'
 dotenv.config();
 
@@ -21,6 +22,7 @@ app.use(express.json());
 app.use(cors({origin:'*'}));
 app.use(morgan('dev'));
 
+app.use('/user' , userRoute)
 app.use('/musicians' , musicianRoute)
 app.use('/instruments' , instrumentRoute)
 

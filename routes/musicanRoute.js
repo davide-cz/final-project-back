@@ -58,13 +58,13 @@ router.patch('/:id', async (req,res)=>{
 //gestione LOGIN / SIGNUP
 router.post('/signup', async (req, res) => {
 
-    const {email, password} = req.body;
-    if(!email || !password){
+    const {name,email, password  } = req.body;
+    if( !name || !email || !password){
         return res.status(400).send('All fields must be filled.')
     }
 
     try{
-        const musician = await Musician.signUp(email, password);
+        const musician = await Musician.signUp(name, email, password );
         const token = generateToken(musician._id);
         res.cookie('token', token, {
             httpOnly: true,
