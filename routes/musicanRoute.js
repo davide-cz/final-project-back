@@ -2,6 +2,7 @@ import axios from "axios";
 import express from "express";
 import Musician from "../models/musicianMod.js";
 import { generateToken } from "../Autenticazione/fileForAuthentication.js";
+import Instrument from "../models/instrumentMod.js";
 
 const router=express.Router();
 
@@ -11,14 +12,17 @@ router.post('/', async (req,res)=>{
         const musician=await Musician.create(req.body);
         res.send(musician)
     }catch(error){
-        res.status(400).send( console.error(error))
+        res.status(400).send(console.error(error))
     }
 });
 
 //chiamata get dell'intera collection
 router.get('/', async (req,res)=>{
     try{
-        const musicians = await Musician.find();
+        const musicians = await Musician.find().populate({
+            path:Instrument,
+            select:'principal_instrument role'
+        });
         res.send(musicians)
     }catch(error){
         res.status(404).send(console.error(error))

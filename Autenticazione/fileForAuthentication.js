@@ -63,3 +63,42 @@ export const reqAuthorization = ()=>{
         next()
     } 
 }
+
+export const reqAdmin = () => {
+    return async (req, res, next) => {
+
+        try{
+
+            const {user} = req;
+    
+            if(!user.role==='admin'){
+                throw new Error('role unauthorized');
+            }
+    
+        }catch(error){
+            console.error(error.message);
+            return res.status(401).send(`Request is not authorized: ${error.message}`);
+        }
+    
+        next();
+    }
+}
+export const reqMusician = () => {
+    return async (req, res, next) => {
+
+        try{
+
+            const {user} = req;
+    
+            if(!user.role==='musician'){
+                throw new Error('role unauthorized');
+            }
+    
+        }catch(error){
+            console.error(error.message);
+            return res.status(401).send(`Request is not authorized: ${error.message}`);
+        }
+    
+        next();
+    }
+}

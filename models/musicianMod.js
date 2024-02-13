@@ -6,7 +6,6 @@ import validator from "validator";
 
 
 const musicianSchema=new Schema ({
-    // props autenticazione USER
 
     user_name:{
         type:SchemaTypes.ObjectId,
@@ -19,6 +18,10 @@ const musicianSchema=new Schema ({
         required:true
     },
     genre:{
+        type:String,
+        required:true
+    },
+    description:{
         type:String,
         required:true
     }
