@@ -26,7 +26,6 @@ app.use('/user' , userRoute)
 app.use('/musicians' , musicianRoute)
 app.use('/instruments' , instrumentRoute)
 
-//gestione logIn / SignUp
 
 
 
