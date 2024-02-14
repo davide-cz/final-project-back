@@ -1,11 +1,11 @@
 import axios from "axios";
 import express from "express";
 import User from "../models/userMod.js";
-import { generateToken } from "../Autenticazione/fileForAuthentication.js";
+import { generateToken, reqAdmin, reqAuthorization ,requireOwner } from "../Autenticazione/fileForAuthentication.js";
 
 const router=express.Router();
 
-//Chiamata post 
+//Chiamata post per TEST 
 router.post('/', async (req,res)=>{
     try{
         const user=await User.create(req.body);
@@ -14,47 +14,6 @@ router.post('/', async (req,res)=>{
         res.status(400).send( console.error(error))
     }
 });
-
-//chiamata get dell'intera collection
-router.get('/', async (req,res)=>{
-    try{
-        const users = await User.find();
-        res.send(users)
-    }catch(error){
-        res.status(404).send(console.error(error))
-    }
-});
-
-//chiamata get per singolo DOCUMENT
-
-router.get('/:user_name' , async (req,res)=>{
-    try{
-        const {user_name}=req.params;
-        const user = await User.findByUserName(user_name);
-        res.send(user);
-    }catch(error){
-        res.status(404).send('user not found');
-    }
-});
-
-//Patch partendo da ID
-router.patch('/:id', async (req,res)=>{
-    try{
-        const {id}=req.params
-        const newUser=Object.entries(req.body)
-        const userToUpdate=await User.findById(id);
-        newUser.forEach(([key,value])=>{
-            userToUpdate[key]=value;
-        })
-        console.log(userToUpdate)
-        await userToUpdate.save();
-        res.send(userToUpdate);
-    }catch(error){
-        res.status(400).send(console.error(error))
-    }
-})
-
-
 
 //gestione LOGIN / SIGNUP
 router.post('/signup', async (req, res) => {
@@ -103,5 +62,59 @@ router.post('/login', async (req, res) => {
     }
 
 });
+
+//chiamata get per singolo DOCUMENT
+
+router.get('/:user_name' , async (req,res)=>{
+    try{
+        const {user_name}=req.params;
+        const user = await User.findByUserName(user_name);
+        res.send(user);
+    }catch(error){
+        res.status(404).send('user not found');
+    }
+});
+
+//user loggato
+//Patch partendo da ID
+router.patch('/:user_name', async (req,res)=>{
+    try{
+        const {user_name}=req.params
+        const newUser=Object.entries(req.body)
+        const userToUpdate=await User.findByUserName(user_name);
+        newUser.forEach(([key,value])=>{
+            userToUpdate[key]=value;
+        })
+        console.log(userToUpdate)
+        await userToUpdate.save();
+        res.send(userToUpdate);
+    }catch(error){
+        res.status(400).send(console.error(error))
+    }
+})
+
+router.use(reqAdmin())
+//chiamate che richiedono ADMIN 
+//COLLECTION USER
+router.get('/', async (req,res)=>{
+    try{
+        const users = await User.find();
+        res.send(users)
+    }catch(error){
+        res.status(404).send(console.error(error))
+    }
+});
+
+router.delete('/:user_name' , async (req,res)=>{
+    try{
+        const {user_name}=req.params;
+        await User.deleteOne({user_name});
+        res.send('user deleted');
+    }catch(error){
+        res.status(404).send('user not found');
+    }
+});
+
+
 
 export default router

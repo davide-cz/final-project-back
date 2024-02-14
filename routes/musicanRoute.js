@@ -1,20 +1,12 @@
 import axios from "axios";
 import express from "express";
 import Musician from "../models/musicianMod.js";
-import { generateToken } from "../Autenticazione/fileForAuthentication.js";
+import { generateToken, reqMusician } from "../Autenticazione/fileForAuthentication.js";
 import Instrument from "../models/instrumentMod.js";
 
 const router=express.Router();
 
-//Chiamata post 
-router.post('/', async (req,res)=>{
-    try{
-        const musician=await Musician.create(req.body);
-        res.send(musician)
-    }catch(error){
-        res.status(400).send(console.error(error))
-    }
-});
+
 
 //chiamata get dell'intera collection
 router.get('/', async (req,res)=>{
@@ -40,7 +32,16 @@ router.get('/:id' , (req,res)=>{
         res.status(404).send('musician not found');
     }
 });
+//Chiamata post 
+router.post('/', async (req,res)=>{
+    try{
 
+        const musician=await Musician.create(req.body);
+        res.send(musician)
+    }catch(error){
+        res.status(400).send(console.error(error))
+    }
+});
 //Patch partendo da ID
 router.patch('/:id', async (req,res)=>{
     try{
@@ -58,8 +59,8 @@ router.patch('/:id', async (req,res)=>{
     }
 })
 
-
-//gestione LOGIN / SIGNUP
+//----------------------------DA CANCELLARE?
+/* //gestione LOGIN / SIGNUP
 router.post('/signup', async (req, res) => {
 
     const {name,email, password  } = req.body;
@@ -106,5 +107,5 @@ router.post('/login', async (req, res) => {
     }
 
 });
-
+ */
 export default router

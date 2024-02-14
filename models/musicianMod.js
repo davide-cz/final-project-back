@@ -7,7 +7,7 @@ import validator from "validator";
 
 const musicianSchema=new Schema ({
 
-    user_name:{
+    user:{
         type:SchemaTypes.ObjectId,
         path:'User',
         required:true,

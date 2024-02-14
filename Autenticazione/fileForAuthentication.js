@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv'
 dotenv.config();
@@ -70,6 +71,7 @@ export const reqAdmin = () => {
         try{
 
             const {user} = req;
+            
     
             if(!user.role==='admin'){
                 throw new Error('role unauthorized');
@@ -87,10 +89,8 @@ export const reqMusician = () => {
     return async (req, res, next) => {
 
         try{
-
-            const {user} = req;
-    
-            if(!user.role==='musician'){
+            const {user} = req
+            if(user.role !=='musician'){
                 throw new Error('role unauthorized');
             }
     
@@ -99,6 +99,14 @@ export const reqMusician = () => {
             return res.status(401).send(`Request is not authorized: ${error.message}`);
         }
     
+        next();
+    }
+};
+export const requireOwner = () => {
+    return async (req, res, next) => {
+        req.dbQuery = req.user.role==='musician' ? {} : {
+            user: req.user.id
+        }
         next();
     }
 }
