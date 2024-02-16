@@ -38,15 +38,22 @@ export const verifyToken = (token) => {
     return _id;
 }
 
-export const reqAuthorization = ()=>{
+export const reqAMusician = (role)=>{
     //funk che controlla se lo user ha un token valido
     return async (req,res,next)=>{
         try{
-            const token = req.cookies?.token;
+            const {authorization} = req.headers;
+            console.log(req.headers)
 
-            if(!token){
-                throw new Error ('token required');
+            if(!authorization){
+                throw new Error ('there is not an authorization');
             }
+
+            const token = authorization.split(' ')[1];
+            if(!token){
+                throw new Error('token required')
+            }
+
             const _id = verifyToken(token);
             //controllo il token e ritorno l'id corrispondente
             const user=await User.findById(_id);
@@ -54,6 +61,10 @@ export const reqAuthorization = ()=>{
             if(!user){
                 throw new Error ('user not found');
             }
+            if(user.role ==! 'musician' && user.role ==!'admin'){
+                throw new Error('role unAuthorized')
+            }
+ 
 
             req.user=user;
 

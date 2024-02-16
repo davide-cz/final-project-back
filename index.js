@@ -22,9 +22,9 @@ app.use(express.json());
 app.use(cors({origin:'*'}));
 app.use(morgan('dev'));
 
+app.use('/instruments' , instrumentRoute)
 app.use('/user' , userRoute)
 app.use('/musicians' , musicianRoute)
-app.use('/instruments' , instrumentRoute)
 
 
 

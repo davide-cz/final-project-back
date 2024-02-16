@@ -1,7 +1,7 @@
 import axios from "axios";
 import express from "express";
 import User from "../models/userMod.js";
-import { generateToken, reqAdmin, reqAuthorization ,requireOwner } from "../Autenticazione/fileForAuthentication.js";
+import { generateToken, reqAdmin, requireOwner } from "../Autenticazione/fileForAuthentication.js";
 
 const router=express.Router();
 
@@ -32,7 +32,7 @@ router.post('/signup', async (req, res) => {
             sameSite: 'none',
             secure: true,
         });
-        return res.status(201).send(user);
+        return res.status(201).send({user:user,token});
     }catch(error){
         console.error(error);
     }
@@ -56,7 +56,7 @@ router.post('/login', async (req, res) => {
             sameSite: 'none',
             secure: true,
         });
-        return res.status(202).send(user);
+        return res.status(202).send({user:user,token});
     }catch(error){
         console.error(error);
     }

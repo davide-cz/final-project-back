@@ -1,5 +1,6 @@
 
 import mongoose from 'mongoose';
+import Instrument from './instrumentMod.js';
 const { Schema , SchemaTypes , model } = mongoose;
 import validator from "validator";
 
@@ -9,12 +10,12 @@ const musicianSchema=new Schema ({
 
     user:{
         type:SchemaTypes.ObjectId,
-        path:'User',
+        ref:'User',
         required:true,
     },
     instrument:{
         type:SchemaTypes.ObjectId,
-        path:'Instruments',
+        ref:'Instrument',
         required:true
     },
     genre:{
