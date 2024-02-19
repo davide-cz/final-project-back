@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(cors({
     origin: [
         'http://localhost:5173', 
-        'final-project-back-chi.vercel.app'
+        'https://final-project-back-chi.vercel.app'
     ],
     credentials: true
 }));
