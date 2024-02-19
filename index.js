@@ -19,7 +19,13 @@ const app=express();
 
 
 app.use(express.json());
-app.use(cors({origin:'*'}));
+app.use(cors({
+    origin: [
+        'http://localhost:5173', 
+        'final-project-back-chi.vercel.app'
+    ],
+    credentials: true
+}));
 app.use(morgan('dev'));
 
 app.use('/instruments' , instrumentRoute)
