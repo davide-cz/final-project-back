@@ -43,7 +43,6 @@ export const reqAMusician = (role)=>{
     return async (req,res,next)=>{
         try{
             const {authorization} = req.headers;
-            console.log(req.headers)
 
             if(!authorization){
                 throw new Error ('there is not an authorization');

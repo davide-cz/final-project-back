@@ -25,6 +25,14 @@ const musicianSchema=new Schema ({
     description:{
         type:String,
         required:true
+    },
+    title_inserction:{
+        type:String,
+        required:true
+    },
+    pricing:{
+        type:Number,
+        required:true
     }
 
 });

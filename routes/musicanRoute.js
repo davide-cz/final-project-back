@@ -9,9 +9,6 @@ const router=express.Router();
 
 
 //chiamata get dell'intera collection
-//router.use(reqAuthorization())
-router.use(reqAMusician());
-
 router.get('/', async (req,res)=>{
     try{
         const musicians = await Musician.find().populate([{
@@ -19,7 +16,7 @@ router.get('/', async (req,res)=>{
             select: 'principal_instrument'
         },{
             path:'user',
-            select: 'user_name'
+            select: 'user_name id'
         }]);
         res.send(musicians)
     }catch(error){
@@ -27,12 +24,23 @@ router.get('/', async (req,res)=>{
     }
 });
 
+//chiamata GET che ritorna tutti gli annunci di un unico user
+//in sospeso
+
 //chiamata get per singolo DOCUMENT
 
-router.get('/:id' , (req,res)=>{
+
+router.use(reqAMusician());
+router.get('/:id' , async (req,res)=>{
     try{
         const {id}=req.params;
-        const musician = Musician.findById(id);
+        const musician = await Musician.findById(id).populate([{
+            path:'instrument',
+            select: 'principal_instrument'
+        },{
+            path:'user',
+            select: 'user_name id'
+        }]);
         res.send(musician);
     }catch(error){
         res.status(404).send('musician not found');
