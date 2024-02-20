@@ -12,6 +12,7 @@ const {MONGO_URI}=process.env;
 
 mongoose.connect(MONGO_URI)
 .then(console.log('connesso a mongoDB'))
+.catch(error=>console.error(error))
 
 import morgan from 'morgan'
 import Musician from './models/musicianMod.js'
@@ -23,7 +24,7 @@ app.use(express.json());
 app.use(cors({
     origin: [
         'http://localhost:5173', 
-        'https://final-project-back-chi.vercel.app'
+        'final-project-front-ten.vercel.app'
     ],
     credentials: true
 }));
