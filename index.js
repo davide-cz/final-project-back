@@ -5,6 +5,7 @@ import dotenv from 'dotenv'
 import musicianRoute from './routes/musicanRoute.js'
 import userRoute from './routes/userRoute.js'
 import instrumentRoute from './routes/instrumentRoute.js'
+const PORT = process.env.PORT || 3000;
 dotenv.config();
 
 const {MONGO_URI}=process.env;
@@ -36,7 +37,7 @@ app.use('/musicians' , musicianRoute)
 
 
 
-app.listen(3000, ()=>{
+app.listen(PORT, ()=>{
     console.log('in ascolto su porta 3000')
 });
 
