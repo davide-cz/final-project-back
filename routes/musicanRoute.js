@@ -72,6 +72,16 @@ router.patch('/:id', async (req,res)=>{
         res.status(400).send(console.error(error))
     }
 })
+// elimina musicista da id
+router.delete('/:id' , async (req,res)=>{
+    try{
+        const {id}=req.params;
+        const musician = await Musician.deleteOne({id})
+        res.send(`musician with id:${id} deleted`);
+    }catch(error){
+        res.status(404).send('musician not found');
+    }
+});
 
 //----------------------------DA CANCELLARE?
 /* //gestione LOGIN / SIGNUP

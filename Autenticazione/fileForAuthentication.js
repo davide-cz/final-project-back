@@ -38,6 +38,38 @@ export const verifyToken = (token) => {
     return _id;
 }
 
+export const reqUser = (role)=>{
+    //funk che controlla se lo user ha un token valido
+    return async (req,res,next)=>{
+        try{
+            const {authorization} = req.headers;
+
+            if(!authorization){
+                throw new Error ('there is not an authorization');
+            }
+
+            const token = authorization.split(' ')[1];
+            if(!token){
+                throw new Error('token required')
+            }
+
+            const _id = verifyToken(token);
+            //controllo il token e ritorno l'id corrispondente
+            const user=await User.findById(_id);
+            
+            if(!user){
+                throw new Error ('user not found');
+            }
+ 
+            req.user=user;
+
+        }catch(error){
+            console.error(error);
+            return res.status(401).send('request is not authorized');
+        }
+        next()
+    } 
+}
 export const reqAMusician = (role)=>{
     //funk che controlla se lo user ha un token valido
     return async (req,res,next)=>{
@@ -95,7 +127,7 @@ export const reqAdmin = () => {
         next();
     }
 }
-export const reqMusician = () => {
+/* export const reqMusician = () => {
     return async (req, res, next) => {
 
         try{
@@ -119,4 +151,4 @@ export const requireOwner = () => {
         }
         next();
     }
-}
+} */

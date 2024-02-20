@@ -1,7 +1,7 @@
 import axios from "axios";
 import express from "express";
 import User from "../models/userMod.js";
-import { generateToken, reqAdmin, requireOwner } from "../Autenticazione/fileForAuthentication.js";
+import { generateToken, reqAdmin } from "../Autenticazione/fileForAuthentication.js";
 
 const router=express.Router();
 
