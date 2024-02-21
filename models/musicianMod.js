@@ -33,7 +33,11 @@ const musicianSchema=new Schema ({
     pricing:{
         type:Number,
         required:true
-    }
+    },
+    favourite_by_user:[{
+        type:SchemaTypes.ObjectId,
+        ref:'User'
+    }]
 
 });
 

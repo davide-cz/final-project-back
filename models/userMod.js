@@ -4,6 +4,7 @@ const { Schema , SchemaTypes , model } = mongoose;
 import validator from "validator";
 const { isStrongPassword, isEmail } = validator;
 import { hashPassword,comparePassword, } from '../Autenticazione/fileForAuthentication.js';
+import Musician from './musicianMod.js';
 
 
 const strongPasswordOptions = {
@@ -36,8 +37,7 @@ const userSchema=new Schema ({
         type: String,
         enum: ['admin', 'user', 'musician'],
         default: 'user'
-      }
-
+      },
 });
 
 
