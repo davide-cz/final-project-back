@@ -76,7 +76,7 @@ router.patch('/:id', async (req,res)=>{
 router.delete('/:id' , async (req,res)=>{
     try{
         const {id}=req.params;
-        await Musician.deleteOne(id);
+        await Musician.findByIdAndDelete(id);
         res.send(`musician with id: ${id} deleted`);
     }catch(error){
         res.status(404).send('musician not found');
