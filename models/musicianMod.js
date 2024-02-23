@@ -28,7 +28,8 @@ const musicianSchema=new Schema ({
     },
     title_inserction:{
         type:String,
-        required:true
+        required:true,
+        maxLength:30
     },
     pricing:{
         type:Number,
