@@ -2,6 +2,7 @@ import axios from "axios";
 import express from "express";
 import User from "../models/userMod.js";
 import { generateToken, reqAdmin } from "../Autenticazione/fileForAuthentication.js";
+import { handleResponseError } from "../Autenticazione/errorHelper.js";
 
 const router=express.Router();
 
@@ -35,6 +36,7 @@ router.post('/signup', async (req, res) => {
         return res.status(201).send({user:user,token});
     }catch(error){
         console.error(error);
+        return handleResponseError(res, error);
     }
 
 });
@@ -59,6 +61,7 @@ router.post('/login', async (req, res) => {
         return res.status(202).send({user:user,token});
     }catch(error){
         console.error(error);
+        return handleResponseError(res, error);
     }
 
 });
