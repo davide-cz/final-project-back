@@ -1,5 +1,5 @@
 export const StatusError = (code, msg) => {
-    const error = new Error(msg);
+    const error = new Error(    );
     error.statusCode = code;
     return error;
 }

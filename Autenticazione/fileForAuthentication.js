@@ -70,6 +70,7 @@ export const reqUser = (role)=>{
         next()
     } 
 }
+
 export const reqAMusician = (role)=>{
     //funk che controlla se lo user ha un token valido
     return async (req,res,next)=>{
